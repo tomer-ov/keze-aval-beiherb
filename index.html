@@ -40,7 +40,8 @@ body{margin:0;background:#f2f3f2;font-family:-apple-system,'Segoe UI',Arial,sans
 .card.best{border:2px solid var(--ig);}
 .crow{display:flex;gap:12px;}
 .thumb{flex:0 0 78px;height:78px;border-radius:9px;background:#f2f2f2;object-fit:contain;}
-.badge{display:inline-block;background:var(--ig);color:#fff;font-size:11px;padding:2px 9px;border-radius:6px;margin-bottom:5px;}
+.badge{display:inline-block;background:var(--ig);color:#fff;font-size:11px;padding:2px 9px;border-radius:6px;margin-bottom:5px;margin-left:4px;}
+.badge.val{background:var(--igl);color:var(--ig);}
 .cname{margin:0 0 6px;font-size:15px;font-weight:700;line-height:1.3;}
 .tags{display:flex;flex-wrap:wrap;gap:5px;}
 .tag{font-size:11px;padding:2px 8px;border-radius:6px;background:#f2f2f2;color:var(--tx2);}
@@ -118,8 +119,10 @@ function render(text){
   let pool;
   if(good.length){pool=good.slice(0,8);}
   else{note="לא מצאנו התאמה מדויקת באוסף הזה — הנה הקרובים ביותר.";pool=scored.slice(0,6);}
-  pool=pool.slice(0,8).sort((a,b)=>a.c.per100-b.c.per100);
+  pool=pool.slice(0,8);
+  pool.sort((a,b)=>(b.s-a.s)||(a.c.per100-b.c.per100));
   let top=pool.slice(0,4).map(x=>x.c);
+  let valIdx=top.length?top.reduce((bi,c,i,arr)=>(c.per100<arr[bi].per100?i:bi),0):-1;
   if(q.fmt&&top.length){
     if(!top.some(c=>c.fmt==q.fmt)) note="מעט "+q.fmt+" באוסף הזה — הנה החלופות הקרובות ביותר (בפורמט אחר).";
     else if(top.filter(c=>c.fmt==q.fmt).length<3) note="מעט "+q.fmt+" כאן — אלה הקרובים ביותר.";
@@ -129,7 +132,7 @@ function render(text){
   let chips=[["face","רק לפנים"],["mineral","רק מינרלי"],["kids","לילדים"],["spf30","מקדם 30"]];
   let ch=chips.map(([k,l])=>`<button class="${EXTRA[k=="spf30"?"spf":k]&&(k!="spf30"||EXTRA.spf==30)?'on':''}" onclick="chip('${k}')">${l}</button>`).join("");
   let noteHtml = note?`<div class="note"><span>ℹ️</span><span>${note}</span></div>`:"";
-  let cards = top.length ? top.map((c,i)=>card(c,i==0,q)).join("") :
+  let cards = top.length ? top.map((c,i)=>card(c,i==0,i==valIdx,q)).join("") :
      `<div class="none">לא נמצאה מקבילה. נסו לחדד את הבקשה.</div>`;
   document.getElementById('results').innerHTML =
     `<div class="q"><div>${esc(text)}</div></div>
@@ -141,19 +144,19 @@ function chip(k){
   else{EXTRA[k]=!EXTRA[k]||undefined;}
   render(document.getElementById('q').value);
 }
-function card(c,best,q){
+function card(c,best,value,q){
   let why=[q.spf?("SPF "+c.spf+(c.spfPlus?"+":"")):"",c.fmt,c.clear&&q.clear?"שקוף":"",q.face?"לפנים":"לגוף"].filter(Boolean).join(" · ");
   let tags=[`<span class="tag g">SPF ${c.spf}${c.spfPlus?"+":""}</span>`];
   if(c.fmt)tags.push(`<span class="tag">${c.fmt}</span>`);
   if(c.clear)tags.push(`<span class="tag">שקוף</span>`);
   (c.hl||[]).forEach(h=>tags.push(`<span class="tag">${esc(h)}</span>`));
-  let unit = c.per100!=null ? `<div class="unit ${best?'g':''}"><b>${c.per100} ₪</b> /100מ״ל</div>` : "";
+  let unit = c.per100!=null ? `<div class="unit ${value?'g':''}"><b>${c.per100} ₪</b> /100מ״ל</div>` : "";
   let img = c.img ? `<img class="thumb" src="${c.img}" loading="lazy" onerror="this.style.visibility='hidden'">` :
             `<div class="thumb"></div>`;
   return `<div class="card ${best?'best':''}">
     <div class="crow">${img}
       <div style="flex:1;min-width:0">
-        ${best?'<span class="badge">הכי משתלם ל-100 מ״ל</span>':''}
+        ${best?'<span class="badge">ההתאמה הטובה ביותר</span>':''}${value&&!best?'<span class="badge val">הכי משתלם ל-100 מ״ל</span>':''}
         <p class="cname">${esc(c.name)}</p>
         <div class="tags">${tags.join("")}</div>
       </div></div>
