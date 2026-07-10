@@ -71,7 +71,7 @@ body{margin:0;background:#f2f3f2;font-family:-apple-system,'Segoe UI',Arial,sans
       <h1>כזה,<br>אבל <span>באייהרב</span></h1>
     </div>
     <div class="searchbar">
-      <input id="q" placeholder="נסו: אולטרסול, תחליב הגנה SPF 50…" />
+      <input id="q" placeholder="נסו: אולטרסול, תחליב הגנה SPF 50…" onkeydown="if(event.key==='Enter'){event.preventDefault();run(this.value);}" />
       <button class="go" onclick="run(document.getElementById('q').value)">↑</button>
     </div>
     <div id="ex" class="ex">
