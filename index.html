@@ -22,7 +22,9 @@ body{margin:0;background:#f2f3f2;font-family:-apple-system,'Segoe UI',Arial,sans
 .searchbar input{flex:1;border:1px solid var(--bd);border-radius:24px;padding:13px 16px;font-size:15px;outline:none;font-family:inherit;}
 .searchbar input:focus{border-color:var(--ig);}
 .go{width:44px;height:44px;flex:0 0 44px;border:none;border-radius:50%;background:var(--ig);color:#fff;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.ex{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:26px;}
+.poplabel{font-size:12px;color:var(--tx2);margin:0 2px 9px;display:flex;align-items:center;gap:5px;}
+#pop{margin-bottom:26px;}
+.ex{display:flex;flex-wrap:wrap;gap:7px;}
 .ex button{font-size:13px;padding:7px 13px;border:1px solid var(--bd);border-radius:20px;background:#fff;color:var(--tx);cursor:pointer;font-family:inherit;}
 .trust{display:flex;gap:16px;border-top:1px solid var(--bd);padding-top:14px;color:var(--tx2);font-size:12px;}
 .trust span{display:flex;align-items:center;gap:5px;}.trust i{color:var(--ig);}
@@ -65,11 +67,17 @@ body{margin:0;background:#f2f3f2;font-family:-apple-system,'Segoe UI',Arial,sans
       <input id="q" placeholder="נסו: אולטרסול, תחליב הגנה SPF 50…" onkeydown="if(event.key==='Enter'){event.preventDefault();run(this.value);}" />
       <button class="go" onclick="run(document.getElementById('q').value)">↑</button>
     </div>
-    <div id="ex" class="ex">
-      <button onclick="run('תחליב הגנה SPF50 לגוף')">תחליב הגנה SPF50</button>
-      <button onclick="run('קרם הגנה מינרלי לפנים')">מינרלי לפנים</button>
-      <button onclick="run('הגנה מהשמש לה רוש פוזה')">לה רוש פוזה</button>
-      <button onclick="run('קרם הגנה לילדים עמיד במים')">לילדים עמיד במים</button>
+    <div id="pop">
+      <div class="poplabel"><span style="color:var(--ig)">◍</span> חיפושים פופולריים עכשיו</div>
+      <div class="ex">
+        <button onclick="run('תחליב הגנה SPF50 לגוף')">תחליב הגנה SPF50</button>
+        <button onclick="run('קרם הגנה מינרלי לפנים')">מינרלי לפנים</button>
+        <button onclick="run('הגנה מהשמש לה רוש פוזה')">לה רוש פוזה</button>
+        <button onclick="run('קרם הגנה קוריאני')">קוריאני</button>
+        <button onclick="run('קרם הגנה לתינוקות')">לתינוקות</button>
+        <button onclick="run('סטיק הגנה שקוף')">סטיק שקוף</button>
+        <button onclick="run('קרם הגנה עמיד במים לילדים')">לילדים עמיד במים</button>
+      </div>
     </div>
     <div id="trust" class="trust"><span><i>✓</i> מחירים מעודכנים</span><span><i>◎</i> אלפי מוצרים</span></div>
     <div id="results"></div>
@@ -108,7 +116,7 @@ function score(q,c){
 }
 function esc(t){return (t||"").replace(/[&<>]/g,x=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[x]));}
 function run(text){document.getElementById('q').value=text;EXTRA={};
-  ['hero','ex','trust'].forEach(id=>document.getElementById(id).classList.add('hide'));render(text);}
+  ['hero','pop','trust'].forEach(id=>document.getElementById(id).classList.add('hide'));render(text);}
 const FLABEL={face:"לפנים",kids:"לילדים",mineral:"מינרלי",clear:"שקוף",waterproof:"עמיד במים",tinted:"בגוון",
   sensitive:"לעור רגיש",dry:"לעור יבש",oily:"לעור שומני",light:"מרקם קליל",natural:"טבעי",korean:"קוריאני",antiage:"אנטי אייג'ינג",lips:"לשפתיים",aftersun:"אחרי שיזוף"};
 function echoText(q){
